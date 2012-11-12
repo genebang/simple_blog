@@ -2,7 +2,7 @@ class ArticlesController < ApplicationController
   
   before_filter :load_article
   before_filter :title_caps, :only => [:index]
-  around_filter :alert_redirect
+  # around_filter :alert_redirect
   
   # GET /articles
   # GET /articles.json
@@ -46,10 +46,11 @@ class ArticlesController < ApplicationController
   # POST /articles.json
   def create
     @article = Article.new(params[:article])
-
+    @articles = Article.all
+    
     respond_to do |format|
       if @article.save
-        format.html { redirect_to @article, notice: 'Article was successfully created.' }
+        format.html { render "index", notice: 'Article was successfully created.' }
         format.json { render json: @article, status: :created, location: @article }
       else
         format.html { render action: "new" }
@@ -62,10 +63,11 @@ class ArticlesController < ApplicationController
   # PUT /articles/1.json
   def update
     @article = Article.find(params[:id])
+    @articles = Article.all
 
     respond_to do |format|
       if @article.update_attributes(params[:article])
-        format.html { redirect_to @article, notice: 'Article was successfully updated.' }
+        format.html { render "index", notice: 'Article was successfully updated.' }
         format.json { head :no_content }
       else
         format.html { render action: "edit" }
@@ -101,19 +103,6 @@ class ArticlesController < ApplicationController
     end
   end
   
-  def alert_redirect
-    begin
-      yield
-    rescue
-      if params[:action] == "index"
-        render :text => "xyz"
-      else 
-        # write apology to flash[:notice]
-        flash[:notice] = "I apologize for breaking"
-        #redirect to index
-        redirect_to articles_path(@article)
-      end
-    end
-  end
+
   
 end
