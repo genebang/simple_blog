@@ -1,9 +1,12 @@
 class CommentsController < ApplicationController
+  
+  before_filter :sad_to_happy, :only => [:create]
+  
   # POST /comments
   # POST /comments.json
   def create
-    @article = Article.find(params[:article_id])
-    @comment = @article.comments.build(params[:comment])
+
+    # puts @comment.inspect
 
     respond_to do |format|
       if @comment.save
@@ -27,4 +30,13 @@ class CommentsController < ApplicationController
       format.json { head :no_content }
     end
   end
+  
+  private
+  
+  def sad_to_happy
+    @article = Article.find(params[:article_id])
+    @comment = @article.comments.build(params[:comment])
+    @comment.body.gsub!("sad", "happy")
+  end
+  
 end

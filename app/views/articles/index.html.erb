@@ -2,6 +2,8 @@
   <div class="article">
     <h3><%= article.title %></h3>
     <p>
+	
+
       <%= raw truncate(article.body, length: 200, separator: '...') %>
       <br>
       <%= link_to 'Show', article %> | 
@@ -9,4 +11,5 @@
       <%= link_to 'Destroy', article, method: :delete, data: { confirm: 'Are you sure?' } %>
     </p>
   </div>
+
 <% end %>

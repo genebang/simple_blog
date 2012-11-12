@@ -1,4 +1,9 @@
 class ArticlesController < ApplicationController
+  
+  before_filter :load_article
+  before_filter :title_caps, :only => [:index]
+  around_filter :alert_redirect
+  
   # GET /articles
   # GET /articles.json
   def index
@@ -80,4 +85,35 @@ class ArticlesController < ApplicationController
       format.json { head :no_content }
     end
   end
+  
+  
+  
+  private
+  
+  def load_article
+    @article = Article.find(params[:id]) if params[:id]
+  end
+  
+  def title_caps
+    @articles = Article.all
+    @articles.each do |article|
+      article.title.upcase!
+    end
+  end
+  
+  def alert_redirect
+    begin
+      yield
+    rescue
+      if params[:action] == "index"
+        render :text => "xyz"
+      else 
+        # write apology to flash[:notice]
+        flash[:notice] = "I apologize for breaking"
+        #redirect to index
+        redirect_to articles_path(@article)
+      end
+    end
+  end
+  
 end
