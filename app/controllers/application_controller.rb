@@ -1,7 +1,7 @@
 class ApplicationController < ActionController::Base
   protect_from_forgery
   
-  around_filter :alert_redirect
+  # around_filter :alert_redirect
   
   def alert_redirect
     begin

@@ -2,12 +2,14 @@ class ArticlesController < ApplicationController
   
   before_filter :load_article
   before_filter :title_caps, :only => [:index]
+  
   # around_filter :alert_redirect
   
   # GET /articles
   # GET /articles.json
   def index
-    @articles = Article.all
+    # @articles = Article.all
+    @articles = Article.ordered_by(params[:order_by], params[:limit])
 
     respond_to do |format|
       format.html # index.html.erb
@@ -45,12 +47,14 @@ class ArticlesController < ApplicationController
   # POST /articles
   # POST /articles.json
   def create
-    @article = Article.new(params[:article])
+    # @article = Article.new(params[:article])
+    @article = Article.new(:body => params[:article][:body],
+                           :title => params[:article][:title])
     @articles = Article.all
     
     respond_to do |format|
       if @article.save
-        format.html { render "index", notice: 'Article was successfully created.' }
+        format.html { redirect_to @article, notice: 'Article was successfully created.' }
         format.json { render json: @article, status: :created, location: @article }
       else
         format.html { render action: "new" }
@@ -67,7 +71,7 @@ class ArticlesController < ApplicationController
 
     respond_to do |format|
       if @article.update_attributes(params[:article])
-        format.html { render "index", notice: 'Article was successfully updated.' }
+        format.html { redirect_to @article, notice: 'Article was successfully updated.' }
         format.json { head :no_content }
       else
         format.html { render action: "edit" }
@@ -102,6 +106,7 @@ class ArticlesController < ApplicationController
       article.title.upcase!
     end
   end
+
   
 
   
