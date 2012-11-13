@@ -5,6 +5,8 @@ SimpleBlog::Application.routes.draw do
   resources :articles do
     resources :comments, only: [:create, :destroy]  
   end
+  
+  match 'articles/search/:search' => 'articles#name_search'
 
   # The priority is based upon order of creation:
   # first created -> highest priority.

@@ -1,6 +1,6 @@
 class ArticlesController < ApplicationController
   
-  before_filter :load_article
+  before_filter :load_article, :except => [:name_search]
   before_filter :title_caps, :only => [:index]
   
   # around_filter :alert_redirect
@@ -90,6 +90,23 @@ class ArticlesController < ApplicationController
       format.html { redirect_to articles_url }
       format.json { head :no_content }
     end
+  end
+  
+  def name_search
+    @search_results = []
+    @articles = Article.all
+    @articles.each do |article|
+      if article.title.include?(params[:search])
+        @search_results << article
+      end
+    end
+    @search_results
+    
+    respond_to do |format|
+      format.html # index.html.erb
+      format.json { render json: @search_results }
+    end
+        
   end
   
   
