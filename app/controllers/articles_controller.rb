@@ -1,15 +1,22 @@
 class ArticlesController < ApplicationController
-  
+
   before_filter :load_article, :except => [:name_search]
   before_filter :title_caps, :only => [:index]
-  
+  before_filter :authenticate_user!
+  load_and_authorize_resource
+  skip_authorize_resource :only => :show
+
+
   # around_filter :alert_redirect
-  
+
   # GET /articles
   # GET /articles.json
   def index
-    # @articles = Article.all
+    # @articles = Article.where(:user_id => current_user.id)
     @articles = Article.ordered_by(params[:order_by], params[:limit])
+    @ability = Ability.new(current_user)
+    puts "#{@ability}"
+    # @user = User.find(current_user.id)
 
     respond_to do |format|
       format.html # index.html.erb
@@ -49,9 +56,10 @@ class ArticlesController < ApplicationController
   def create
     # @article = Article.new(params[:article])
     @article = Article.new(:body => params[:article][:body],
-                           :title => params[:article][:title])
+                           :title => params[:article][:title],
+                           :user_id => current_user.id)
     @articles = Article.all
-    
+
     respond_to do |format|
       if @article.save
         format.html { redirect_to @article, notice: 'Article was successfully created.' }
@@ -91,7 +99,7 @@ class ArticlesController < ApplicationController
       format.json { head :no_content }
     end
   end
-  
+
   def name_search
     @search_results = []
     @articles = Article.all
@@ -101,22 +109,22 @@ class ArticlesController < ApplicationController
       end
     end
     @search_results
-    
+
     respond_to do |format|
       format.html # index.html.erb
       format.json { render json: @search_results }
     end
-        
+
   end
-  
-  
-  
+
+
+
   private
-  
+
   def load_article
     @article = Article.find(params[:id]) if params[:id]
   end
-  
+
   def title_caps
     @articles = Article.all
     @articles.each do |article|
@@ -124,7 +132,8 @@ class ArticlesController < ApplicationController
     end
   end
 
-  
 
-  
+
+
+
 end

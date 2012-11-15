@@ -1,16 +1,17 @@
 class Article < ActiveRecord::Base
-  
+
   include TextValidations
-  
+
   has_many :comments, dependent: :destroy
+  belongs_to :user
 
   validates_associated :comments
-  
-  attr_accessible :body, :title
-    
+
+  attr_accessible :body, :title, :user_id
+
   validates :title, :presence => true, :format => {:without => /kitten/}
   validates :body, :presence => true, :format => {:without => /kitten/}
-  
+
   def self.ordered_by(param1, param2 = 10)
     case param1
     when 'title' then self.order('title').limit(param2)
@@ -18,15 +19,15 @@ class Article < ActiveRecord::Base
     when 'word_count' then self.word_count[0..(param2.to_i-1)]
     else self.all
     end
-    # 
+    #
     # if param2 == 0
     #   self.all
     # else
     #   self.limit(param2)
     # end
   end
-  
-  
+
+
   def self.word_count
     # count_array = []
     # @articles = Article.all
@@ -39,7 +40,7 @@ class Article < ActiveRecord::Base
     @articles.sort_by{|article|article.body.split(" ").size}
   end
   # validate :word_count
-  # 
+  #
   # def word_count
   #   self.body = "" if self.body == nil
   #   if self.body.split(' ').size > 2
@@ -47,5 +48,5 @@ class Article < ActiveRecord::Base
   #     raise "error"
   #   end
   # end
-  
+
 end
