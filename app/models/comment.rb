@@ -9,7 +9,7 @@ class Comment < ActiveRecord::Base
   # validates_associated :articles
   
   # validates :body, :length => {:maximum => 250}#, :format => {:without => /kitten/}
-  validates :article, :presence => true
+  # validates :article, :presence => true
   
   # validate :word_count
   # 

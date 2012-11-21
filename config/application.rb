@@ -11,7 +11,7 @@ end
 
 module SimpleBlog
   class Application < Rails::Application
-    
+
     config.autoload_paths << "#{config.root}/lib"
     # Settings in config/environments/* take precedence over those specified here.
     # Application configuration should go into files in config/initializers
@@ -60,5 +60,11 @@ module SimpleBlog
 
     # Version of your assets, change this if you want to expire all your assets
     config.assets.version = '1.0'
+
+    config.generators do |g|
+      g.test_framework      :rspec, :fixture => true
+      g.fixture_replacement :fabrication
+    end
+
   end
 end

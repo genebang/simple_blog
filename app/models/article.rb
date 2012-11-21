@@ -5,12 +5,12 @@ class Article < ActiveRecord::Base
   has_many :comments, dependent: :destroy
   belongs_to :user
 
-  validates_associated :comments
+  # validates_associated :comments
 
   attr_accessible :body, :title, :user_id
 
-  validates :title, :presence => true, :format => {:without => /kitten/}
-  validates :body, :presence => true, :format => {:without => /kitten/}
+  # validates :title, :presence => true, :format => {:without => /kitten/}
+  # validates :body, :presence => true, :format => {:without => /kitten/}
 
   def self.ordered_by(param1, param2 = 10)
     case param1
